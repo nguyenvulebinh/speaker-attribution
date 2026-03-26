@@ -19,6 +19,9 @@ cache/
 # Backups / experiments
 bak/
 
+# Not part of repo (local service variant)
+diarization/
+
 # Logs
 *.log
 
