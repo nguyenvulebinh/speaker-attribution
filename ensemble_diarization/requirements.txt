@@ -1,0 +1,7 @@
+# torch/torchaudio from base image
+fastapi
+uvicorn
+loguru
+requests
+numpy
+python-multipart

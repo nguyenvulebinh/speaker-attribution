@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  spk-attribute:
+    build: .
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment: 
+      CUDA_VISIBLE_DEVICES: ${CUDA_ASR:-2}
+    ports:
+      - 5024:5024
+    volumes:
+      - 'cache:/cache'
+    restart: on-failure
+
+volumes:
+    cache: {}
+

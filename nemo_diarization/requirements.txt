@@ -1,0 +1,7 @@
+fastapi==0.135.1
+uvicorn==0.42.0
+loguru==0.7.3
+soundfile
+python-multipart==0.0.22
+omegaconf
+

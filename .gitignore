@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+.Python
+*.egg-info/
+
+# Virtual envs / env files
+venv/
+.venv/
+.env
+.env.*
+
+# Model artifacts / caches
+model-bin/
+cache/
+
+# Backups / experiments
+bak/
+
+# Logs
+*.log
+
+ensemble_diarization/scripts/

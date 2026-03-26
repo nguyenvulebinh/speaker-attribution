@@ -1,0 +1,5 @@
+# torch/torchaudio from base image
+uroman
+fastapi
+uvicorn
+python-multipart
