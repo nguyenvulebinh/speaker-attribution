@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Dict, List
 
 from ..core.types import Window
-from ..io.audio_io import SAMPLE_RATE, slice_waveform, waveform_to_wav_bytes_pcm16
+from ..io.audio_io import slice_waveform, waveform_to_wav_bytes_pcm16
 from .repair import choose_reference_medoid_near_mean
 from .speaker_attribute_client import SpeakerAttributeOutput, infer_word_speaker_embeddings_http
 
@@ -23,20 +23,9 @@ def build_speaker_reference_embeddings(
         words = [x[2] for x in w.words]
         if not words:
             continue
-        # Avoid degenerate reference windows (can produce empty audio blobs).
-        if w.end <= w.start:
-            continue
         lang = language_by_segment.get(w.words[0][0], "en")
-
-        start_samp = int(max(0.0, w.start) * SAMPLE_RATE)
-        end_samp = int(max(0.0, w.end) * SAMPLE_RATE)
-        if end_samp <= start_samp:
-            continue
-
         audio = slice_waveform(session_waveform, w.start, w.end)
         audio_bytes = waveform_to_wav_bytes_pcm16(audio)
-        if not audio_bytes:
-            continue
         out: SpeakerAttributeOutput = infer_word_speaker_embeddings_http(
             audio_bytes=audio_bytes,
             transcript=" ".join(words),
