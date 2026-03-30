@@ -11,7 +11,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
-      CUDA_VISIBLE_DEVICES: ${CUDA_DIARIZATION:-7}
+      CUDA_VISIBLE_DEVICES: ${CUDA_DIARIZATION:-1}
     shm_size: 10gb
     ports:
       - "5022:5022"
@@ -29,7 +29,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
-      CUDA_VISIBLE_DEVICES: ${CUDA_FORCE_ALIGNMENT:-7}
+      CUDA_VISIBLE_DEVICES: ${CUDA_FORCE_ALIGNMENT:-1}
     shm_size: 10gb
     ports:
       - "5023:5023"
@@ -47,7 +47,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
-      CUDA_VISIBLE_DEVICES: ${CUDA_ASR:-7}
+      CUDA_VISIBLE_DEVICES: ${CUDA_ASR:-1}
     shm_size: 10gb
     ports:
       - "5024:5024"
@@ -67,7 +67,7 @@ services:
               count: all
               capabilities: [gpu]
     environment:
-      CUDA_VISIBLE_DEVICES: ${CUDA_ENSEMBLE:-7}
+      CUDA_VISIBLE_DEVICES: ${CUDA_ENSEMBLE:-1}
       DIARIZATION_URL: http://nemo_diarization:5022/diarize
       ALIGNMENT_URL: http://force_alignment:5023/align_words
       SPEAKER_ATTRIBUTE_BASE_URL: http://speaker_attribute:5024

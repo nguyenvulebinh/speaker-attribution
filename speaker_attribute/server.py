@@ -280,9 +280,26 @@ def pcm_s16le_to_tensor(pcm_s16le):
 @app.route("/asr/infer/<input_language>,<output_language>", methods=["POST"])
 def inference(input_language, output_language):
     try:
-        pcm_s16le: bytes = request.files.get("pcm_s16le").read()
-    except:
-        return json.dumps({"hypo": "", "status":400}), 400
+        pcm_file = request.files.get("pcm_s16le")
+        if pcm_file is None:
+            raise KeyError("pcm_s16le missing from multipart")
+        pcm_s16le: bytes = pcm_file.read()
+    except Exception as e:
+        files_keys = list(request.files.keys())
+        print(
+            "[speaker_attribute] 400 missing/unreadable pcm_s16le "
+            f"files={files_keys} content_length={request.content_length} "
+            f"content_type={request.content_type} err={type(e).__name__}: {e}"
+        )
+        return json.dumps({
+            "hypo": "",
+            "status": 400,
+            "error": "missing_or_invalid_pcm_s16le",
+            "files": files_keys,
+            "content_length": request.content_length,
+            "content_type": request.content_type,
+            "exception": type(e).__name__,
+        }), 400
     prefix = request.files.get("prefix") # can be None
     if prefix is not None:
         prefix: str = prefix.read().decode("utf-8")
@@ -325,7 +342,7 @@ def version():
 
 @app.route("/asr/available_languages", methods=["GET","POST"])
 def languages():
-    langs = [x[2:-2] for x in processor.tokenizer.additional_special_tokens if len(x)==6]
+    langs = [x[2:-2] for x in asr_processor.tokenizer.additional_special_tokens if len(x)==6]
     return langs
 
 (asr_model, asr_processor, spk_attribute_model), max_batch_size = initialize_model()
