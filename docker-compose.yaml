@@ -64,6 +64,7 @@ services:
               capabilities: [gpu]
     environment:
       CUDA_VISIBLE_DEVICES: ${CUDA_ASR:-1}
+      FLASK_TRUSTED_HOSTS: ""
     shm_size: 10gb
     ports:
       - "5024:5024"

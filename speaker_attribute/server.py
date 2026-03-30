@@ -19,6 +19,8 @@ host = os.getenv("HOST", "0.0.0.0")
 port = int(os.getenv("PORT", "5024"))
 
 app = Flask(__name__)
+trusted_hosts = os.getenv("FLASK_TRUSTED_HOSTS")
+app.config["TRUSTED_HOSTS"] = trusted_hosts.split(",") if trusted_hosts else None
 
 def extract_word_speaker_embedding(spk_attribute_model, processor, audios, audio_features, acoustic_features, words_batch, languages, use_attention_mask=True):
     device = next(spk_attribute_model.parameters()).device
