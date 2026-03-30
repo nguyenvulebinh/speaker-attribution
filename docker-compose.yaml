@@ -15,6 +15,14 @@ services:
     shm_size: 10gb
     ports:
       - "5022:5022"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5022/live"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: on-failure
 
   force_alignment:
@@ -33,6 +41,14 @@ services:
     shm_size: 10gb
     ports:
       - "5023:5023"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5023/healthz"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: on-failure
 
   speaker_attribute:
@@ -53,6 +69,14 @@ services:
       - "5024:5024"
     volumes:
       - cache:/cache
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5024/asr/version"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: on-failure
 
   ensemble_diarization:
@@ -74,11 +98,20 @@ services:
     shm_size: 10gb
     ports:
       - "5025:5025"
+    networks:
+      - backend
     depends_on:
-      - nemo_diarization
-      - force_alignment
-      - speaker_attribute
+      nemo_diarization:
+        condition: service_healthy
+      force_alignment:
+        condition: service_healthy
+      speaker_attribute:
+        condition: service_healthy
     restart: on-failure
 
 volumes:
   cache: {}
+
+networks:
+  backend:
+    driver: bridge
